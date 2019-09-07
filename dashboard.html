@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+
+    <div class="container mt-5" >
+        <div class="row ">
+            <div class="col-md-12">
+               <h1 class="mb-5">Dashboard</h1>
+               <a href="index.html" class="btn btn-primary btn-sm">Home</a>
+                <button class="btn btn-danger btn-sm" id="logout">Logout</button>
+                <p class="mt-2"> <span id="user"></span> </p>
+               <!-- <hr> -->
+
+               <table class="table" id="resData">
+                   
+               </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/6.6.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.6.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.6.0/firebase-firestore.js"></script>
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+        https://firebase.google.com/docs/web/setup#config-web-app -->
+
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyDXOy6pa1lhZd82qODODrJ8saYrzgZcXx4",
+            authDomain: "your-thougths.firebaseapp.com",
+            databaseURL: "https://your-thougths.firebaseio.com",
+            projectId: "your-thougths",
+            storageBucket: "your-thougths.appspot.com",
+            messagingSenderId: "866579494617",
+            appId: "1:866579494617:web:8318f7fb292812184d30c8"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        let db = firebase.firestore();
+        var i=1;
+
+        document.getElementById('logout').addEventListener('click',logoutUser);
+        
+        db.collection("data").get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                // console.log(`${doc.id} => ${doc.data()}`);
+                console.log(doc.data())
+                document.getElementById('resData').innerHTML += `
+                    <tr>
+                        <th scope="row">`+i+++`</th>
+                        <td>`+doc.data().msg+`</td>
+                        <td>`+doc.data().time+`</td>
+                        <td><button class='btn btn-danger btn-sm' onclick='deleteData("`+doc.id+`")'>Delete</button></td>
+                    </tr>
+                `;
+            });
+        });
+
+        function deleteData(id){
+            db.collection('data').doc(id).delete().then(()=>{
+                console.log('Data Removed')
+                alert('Data Removed')
+            }).catch(e=>{
+                console.log('Error with :'+e)
+            })
+        }
+
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                // User is signed in.
+                var email = user.email;
+                var uid = user.uid;
+                document.getElementById('user').innerHTML=email;
+                
+            } else {
+                document.location = "index.html";
+                // User is signed out.
+                // ...
+            }
+        });
+
+        function logoutUser(){
+            firebase.auth().signOut().then(function() {
+                // Sign-out successful.
+                document.location = "login.html";
+                console.log('User Logged Out!');
+            }).catch(function(error) {
+                // An error happened.
+                console.log(error);
+            });
+        }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    
+    
+</body>
+</html>

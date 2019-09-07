@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+
+    <div class="container" style="margin-top:15%">
+        <div class="row ">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <div class="alert alert-success" class="close" data-dismiss="alert" role="alert" id="success">
+                    Data Added Successfully!
+                </div>
+                <div class="alert alert-danger" role="alert" id="error">
+                    Error Found!
+                </div>
+                <div style="text-align: center">
+                    <div class="form-group">
+                        <label for="msg">Example textarea</label>
+                        <textarea class="form-control" id="msg" rows="3"></textarea>
+                    </div>
+                    <button class="btn btn-primary" id="submit">Share</button>
+                </div>
+                <div style="text-align: center" class="mt-3">
+                    <a href="login.html" >Login as a Admin</a> | 
+                    <a href="dashboard.html" >Dashboard</a>
+                </div>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/6.6.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.6.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.6.0/firebase-firestore.js"></script>
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+        https://firebase.google.com/docs/web/setup#config-web-app -->
+
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyDXOy6pa1lhZd82qODODrJ8saYrzgZcXx4",
+            authDomain: "your-thougths.firebaseapp.com",
+            databaseURL: "https://your-thougths.firebaseio.com",
+            projectId: "your-thougths",
+            storageBucket: "your-thougths.appspot.com",
+            messagingSenderId: "866579494617",
+            appId: "1:866579494617:web:8318f7fb292812184d30c8"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        let db = firebase.firestore();
+
+        document.getElementById('success').style.display = "none"
+        document.getElementById('error').style.display = "none"
+        document.getElementById('submit').addEventListener('click', addData)
+
+        function addData(){
+            let msg = document.getElementById('msg').value 
+
+            db.collection('data').add({
+                msg: msg,
+                time: Date()
+            }).then(docRef=>{
+                document.getElementById('success').style.display = "block"
+                console.log('Data Added with id: ' +docRef.id)
+            }).catch(e=>{
+                document.getElementById('error').style.display = "block"
+                console.log('Error' +e )
+            })
+        }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    
+    
+</body>
+</html>
