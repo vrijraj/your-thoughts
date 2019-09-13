@@ -45,13 +45,27 @@
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         let db = firebase.firestore();
+
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                // User is signed in.
+                var email = user.email;
+                var uid = user.uid;
+                document.getElementById('user').innerHTML=email;
+                
+            } else {
+                document.location = "index.html";
+                // User is signed out.
+                // ...
+            }
+        });
+
         var i=1;
 
         document.getElementById('logout').addEventListener('click',logoutUser);
         
         db.collection("data").get().then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
-                // console.log(`${doc.id} => ${doc.data()}`);
                 console.log(doc.data())
                 document.getElementById('resData').innerHTML += `
                     <tr>
@@ -73,19 +87,7 @@
             })
         }
 
-        firebase.auth().onAuthStateChanged(function(user) {
-            if (user) {
-                // User is signed in.
-                var email = user.email;
-                var uid = user.uid;
-                document.getElementById('user').innerHTML=email;
-                
-            } else {
-                document.location = "index.html";
-                // User is signed out.
-                // ...
-            }
-        });
+        
 
         function logoutUser(){
             firebase.auth().signOut().then(function() {
